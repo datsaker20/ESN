@@ -1,0 +1,254 @@
+﻿<div class="product-main-area mb-70 mt-20" ng-controller="app.views.public.book-detail">
+<div class="container" ng-if="bookData.id > 0">
+<div class="row">
+<div class="col-lg-12 col-md-12 col-12 order-lg-1 order-1">
+<!-- product-main-area-start -->
+<div class="product-main-area" >
+	<div class="row">
+		<div class="col-md-3 col-12">
+			<div style="display: flex; flex-direction: column">
+				<img src="{{bookData.cover_book}}" alt="woman" draggable="false" style="height: 415px;">
+				<div style="display: flex;">
+					<button ng-click="onInterestBook()" style="margin-top: 10px; flex: 1" class="btn-main-f" ng-if="!checkOwnerAuthor()">
+						<span class="button_contents">
+							<i class="fa fa-heart" ng-style="{'color': bookInterest.isInterest? '#f50000' : 'white'}"></i>
+							<span class="button_text js_preference_count">
+								{{bookInterest.quantity | number:0}}
+							</span>
+						</span>
+					</button>
+					<button ng-click="onReportBook()" 
+					        style="margin-top: 10px; flex: 1;margin-left: 10px; background-color: #cd3c3c;" 
+					        class="btn-main-f" ng-if="!isReported">
+						Report book
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-9 col-12">
+			<div class="product-info-main">
+				<div class="page-title">
+					<h1>{{bookData.name}}</h1>
+				</div>
+				<div class="product-reviews-summary main">
+					<div class="rating-summary">
+						<a><i class="fa fa-star" ng-style="{'color': bookRate.rate > 0 ? '#F07C29' : 'inherit'}"></i></a>
+						<a><i class="fa fa-star" ng-style="{'color': bookRate.rate > 1 ? '#F07C29' : 'inherit'}"></i></a>
+						<a><i class="fa fa-star" ng-style="{'color': bookRate.rate > 2 ? '#F07C29' : 'inherit'}"></i></a>
+						<a><i class="fa fa-star" ng-style="{'color': bookRate.rate > 3 ? '#F07C29' : 'inherit'}"></i></a>
+						<a><i class="fa fa-star" ng-style="{'color': bookRate.rate > 4 ? '#F07C29' : 'inherit'}"></i></a>
+
+						<span style="margin-left: 5px; color: red">{{bookRate.rate || 0}} score</span>
+					</div>
+								
+					<div class="reviews-actions">
+						<a>({{bookRate.quantity | number:0}} Reviews)</a>
+					</div>
+								
+								
+				</div>
+                <div class="book-info">
+                    <button ng-click="followAuthor(bookData.ownerId)"
+                            ng-if="!checkOwnerAuthor()"
+                            class="btn-main-f mb-4">
+                        {{bookData.isFollowed ? 'UnFollow' : 'Follow'}} Author
+                    </button>
+                    <label class="d-block"><span>Author: </span> {{bookData.author}} </label>
+                    <label class="d-block"><span>Number of chapter:</span> {{chapters.length}}</label>
+                    <label class="d-block"><span>Update:</span> {{bookData.approve_reject_date | date: 'dd/MM/yyyy'}}</label>
+                    <label class="d-block"><span>Status:</span> {{bookData.isCompleted ? 'Book completed' : 'Book is writting'}}</label>
+
+                    <label class="d-block" style="margin-top: 15px;"
+                           ng-if="checkBuyAllBook()"><span class="book-free-label" style="background-color: #23bd5e; color: white; padding: 5px 10px;">Bought the book</span> </label>
+                </div>
+							
+				<div class="product-info-price">
+					<div class="price-final">
+						<span ng-if="!bookData.is_book_free">{{bookData.price | number:0}} <i class="fa fa-bitcoin"></i></span>
+						<span class="free-book book-free-label" ng-if="bookData.is_book_free">Only sale chapters</span>
+					</div>
+				</div>
+				<div class="product-add-form" ng-if="!bookData.is_book_free && !checkBuyAllBook() && !checkOwnerAuthor() && bookData.isCompleted">
+					<form>
+						<a ng-click="byAllBook()" style="color:white">Buy all book</a>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>	
+</div>
+<!-- product-main-area-end -->
+<!-- product-info-area-start -->
+<div class="product-info-area mt-80">
+	<!-- Nav tabs -->
+	<ul class="nav" role="tablist">
+		<li><a href="#Details" data-bs-toggle="tab" aria-selected="true" role="tab" tabindex="-1" class="active">Details</a></li>
+		<li><a href="#Reviews" data-bs-toggle="tab" role="tab">Reviews</a></li>
+	</ul>
+	<div class="tab-content">
+		<div class="tab-pane fade active show" id="Details" role="tabpanel">
+			<div class="chappter-area">
+				<div class="chapter-action-bar">
+					<input type="checkbox" ng-change="chooseAllChap()" ng-model="isCheckAll" class="checkbox-f">
+					<div class="right-bar">
+						<span>{{chapterSelected.length}} chapter</span>
+						<span class="f-seperate">| </span>
+						<span class="price-c" style="font-size: 1em;">{{getPriceChapSelected() | number:0}} <i class="fa fa-bitcoin"></i></span>
+				                    
+						<button class="btn-main-f" ng-click="buyChapterFnc()"
+						        ng-if="!bookData.is_book_free && !checkBuyAllBook() && !checkOwnerAuthor()" 
+						        style="padding: 3px 10px; margin-left: 10px;">Buy</button>
+					</div>
+				</div>
+		                    
+				<div class="chapter-list">
+					<div class="chapter-item" ng-repeat="chapter in chaptersSeperate">
+						<div class="checkbox-1">
+							<input type="checkbox" ng-model="chapter.isChecked" value="true" ng-change="chooseChapter(chapter)" 
+							       ng-disabled="isBought(chapter) || !chapter.price" class="checkbox-f"/>
+						</div>
+                        <div class="chapter-content">
+                            <div class="chapter-title">{{chapter.title}}</div>
+                            <div class="chapter-meta">
+                                <span class="publish_date">{{chapter.lastModifiedAt | date: 'dd/MM/yyyy : HH:mm'}}</span> |
+                                <span class="price-c" ng-if="chapter.price > 0">{{chapter.price | number:0}}<i class="fa fa-bitcoin"></i></span>
+                                <span class="price-c book-free-label" ng-if="!chapter.price">Free</span>
+                            </div>
+
+                        </div>
+				                    
+						<div class="chapter-item-action">
+							<button class="btn-view-chapter btn-main-f" ng-if="isBought(chapter) || !chapter.price || checkOwnerAuthor()" ng-click="readChapter(chapter.id)">Read</button>
+						</div>
+					</div>
+			                    
+					<div class="btn-load-more" ng-if="checkLoadMore()" ng-click="loadMore()">Load more</div>
+				</div>
+			</div>
+	                    
+			<div class="mo-ta-area mt-20">
+				<h4>Description</h4>
+				<div ng-bind-html="bookData.description"></div>
+			</div>
+		</div>
+		<div class="tab-pane fade " id="Reviews" role="tabpanel">
+			<div class="valu valu-2">
+				<div class="review-field-ratings">
+					<span>Your Rating </span>
+					<div class="control">
+						<div class="single-control">
+							<div class="review-control-vote vote-total" data-value="0" style="padding-left: 0">
+								<a data-value="1" ng-click="setRateScore(1)" ng-class="{'active': userRate.rate == 1}"
+								   ng-style="{'color': userRate.rate > 0 ? '#F07C29' : 'inherit'}"><i class="fa fa-star"></i></a>
+								<a data-value="2" ng-click="setRateScore(2)" ng-class="{'active': userRate.rate == 2}"
+								   ng-style="{'color': userRate.rate > 1 ? '#F07C29' : 'inherit'}"><i class="fa fa-star"></i></a>
+								<a data-value="3" ng-click="setRateScore(3)" ng-class="{'active': userRate.rate == 3}"
+								   ng-style="{'color': userRate.rate > 2 ? '#F07C29' : 'inherit'}"><i class="fa fa-star"></i></a>
+								<a data-value="4" ng-click="setRateScore(4)" ng-class="{'active': userRate.rate == 4}"
+								   ng-style="{'color': userRate.rate > 3 ? '#F07C29' : 'inherit'}"><i class="fa fa-star"></i></a>
+								<a data-value="5" ng-click="setRateScore(5)" ng-class="{'active': userRate.rate == 5}"
+								   ng-style="{'color': userRate.rate > 4 ? '#F07C29' : 'inherit'}"><i class="fa fa-star"></i></a>
+							</div>
+						</div>
+	                                
+						<div class="single-control">
+							<div style="position: relative;">
+								<textarea name="massage" rows="4" ng-model="rateComment" style="padding-right: 50px;" id="rateCommentTextarea"
+												class="textarea-f"></textarea>
+								<div class="rate-button-action" style="position:absolute; right: 5px; top: 0;" ng-if="haveRate">
+									<a ng-click="editRateComment()">Edit</a>
+									<a ng-click="deleteRateComment()">Delete</a>
+								</div>
+							</div>
+						</div>
+	                                
+						<div class="review-form-button">
+							<a ng-click="cancelEditRate()" ng-if="isEditrateComment">Cancel</a>
+							<a ng-click="submitReview()" ng-if="!haveRate">Submit Review</a>
+						</div>
+	                                
+					</div>
+				</div>
+			</div>
+	                    
+			<div class="valu valu-2">
+				<div class="seperator-div"></div>
+		                    
+				<div class=rating-list-container>
+					<div class="rate-item" ng-repeat="rate in rateting">
+						<div class="rate-info">
+							<div class="review-control-vote">
+								<a ng-style="{'color': rate.rate > 0 ? '#F07C29' : 'inherit'}"><i class="fa fa-star"></i></a>
+								<a ng-style="{'color': rate.rate > 1 ? '#F07C29' : 'inherit'}"><i class="fa fa-star"></i></a>
+								<a ng-style="{'color': rate.rate > 2 ? '#F07C29' : 'inherit'}"><i class="fa fa-star"></i></a>
+								<a ng-style="{'color': rate.rate > 3 ? '#F07C29' : 'inherit'}"><i class="fa fa-star"></i></a>
+								<a ng-style="{'color': rate.rate > 4 ? '#F07C29' : 'inherit'}"><i class="fa fa-star"></i></a>
+							</div>
+							<span class="rate-user">{{rate.userName}}</span>
+							<span class="rate-date" style="display: block">{{rate.rateDate | date:'dd/MM/yyyy HH:mm'}}</span>
+						</div>
+				                    
+						<div class="rate-comment">
+							<div class="content">{{rate.rateComment}}</div>
+					                    
+							<div class="rate-comment-btn">
+								<button class="btn-main-f" ng-click="openSubComment(rate)">{{rate.countComments > 0 ? ('(' + rate.countComments + ')') : ''}} Comment</button>
+							</div>
+                                        				                    
+							<div class="sub-comment-container" ng-if="rate.isSubOpen">
+								<div class="sub-comment-item" ng-repeat="sub in rate.subComment">
+									<span class="sub-content">{{sub.comment}}</span>
+									<div class="sub-comment-meta">
+										<span class="sub-comment-user">{{sub.userName}}</span>
+										<span class="f-seperate">|</span>
+										<span class="sub-date">{{sub.commentDate | date: 'dd/MM/yyyy HH:mm'}}</span>
+										<span class="f-seperate" ng-if="checkIsUserSub(sub)">|</span>
+										<span ng-if="checkIsUserSub(sub)" ng-click="deleteSubComment(sub, rate)" class="sub-delete-btn">
+											Delete
+										</span>
+									</div>
+								</div>
+                                        					                    
+								<div class="sub-comment-input-container">
+									<textarea class="sub-comment-input textarea-f" ng-model="sub.textInput" rows="4"></textarea>
+									<button class="btn-sub-add-comment" ng-click="addSubComment(sub, rate)" 
+									        style="border: 1px solid #cecece">Add comment</button>
+								</div>
+							</div>
+						</div>
+				                    
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>	
+</div>
+</div>
+</div>
+</div>
+
+<div class="container" ng-if="!bookData || !bookData.id">
+	<div class="row">
+		<div class="col-12">
+			<h4>Book not exists</h4>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="modalReport" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel" style="font-size: 16px;">Report book</h5>
+            
+			</div>
+			<div class="modal-body" style="padding: 10px;">
+				<textarea rows="5" ng-model="reportComment" placeholder="report comment" style="width: 100%;" class="form-control"></textarea>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" ng-click="closeModalReport()">Close</button>
+				<button type="button" class="btn btn-primary" ng-click="processReport()">Report</button>
+			</div>
+		</div>
+	</div>
+</div>
+</div>

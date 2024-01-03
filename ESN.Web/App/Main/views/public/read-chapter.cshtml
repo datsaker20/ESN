@@ -1,0 +1,60 @@
+﻿
+<style>
+	.content-chapter-container *{
+		font-size: 1rem !important;
+	}
+</style>
+<div class="product-main-area mb-70 mt-20" ng-controller="app.views.public.readBook">
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+
+				<div class="chapter-info-header" style="margin-bottom: 10px;">
+					<div style="font-size: 20px;
+                                    font-weight: bold;
+                                    color: #f87d39;">Chapter: {{chapterDetail.title}}</div>
+				</div>
+
+				<div style="display: flex; width: 100%; margin-bottom: 20px;">
+					<button ng-click="reportChapter()" style="margin-top: 10px;" class="btn-main-f" ng-if="!isReported">Report chapter</button>
+
+					<div style="margin-left: auto">
+						<button ng-click="clickNavigater('pre')" ng-if="checkPre()" class="btn-main-f">
+							<i class="fa fa-arrow-left"></i>
+							Pre chapter
+						</button>
+						<button ng-click="clickNavigater('next')" ng-if="checkNext()" class="btn-main-f">
+							Next chapter
+							<i class="fa fa-arrow-right"></i>
+						</button>
+					</div>
+				</div>
+
+				<div class="content-chapter-container" ng-bind-html="chapterDetail.content_public" style="border: 1px solid #ede9e9;
+                                                                                                              border-radius: 3px;
+                                                                                                              min-height: 600px;
+                                                                                                              padding: 10px;">
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalReport" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel" style="font-size: 16px;">Report chapter</h5>
+        
+      </div>
+      <div class="modal-body" style="padding: 10px;">
+	      <textarea rows="5" ng-model="reportComment" placeholder="report comment" style="width: 100%;" class="form-control"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" ng-click="closeModalReport()">Close</button>
+        <button type="button" class="btn btn-primary" ng-click="processReport()">Report</button>
+      </div>
+    </div>
+  </div>
+</div>

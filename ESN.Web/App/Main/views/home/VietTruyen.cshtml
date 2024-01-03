@@ -1,0 +1,168 @@
+﻿<div  class="container" ng-controller="app.createOrEditBook">
+    <div class="row">
+        <div class="col-12">
+            <div class="myaccount-content" id="book-detail-container">
+                <h4>Book info</h4>
+                <div class="account-details-form">
+                    <div class="form-group row">
+                        <div class="col-sm-12 d-flex">
+                            <div class="div-choose-image">
+                                <img alt="Ảnh bìa" src="{{truyen.anhBiaUrl}}">
+                                <div>
+                                    <button id="btn-chooseFile" class="btn btn-sm btn-success mr-4" type="button" ng-click="onChonAnhBia()" ng-if="!isReadOnly()">Choose cover book</button>
+                                    <div class="invalid-feedback" ng-show="isSubmited && !truyen.anhBiaUrl && action !== 'nhap'">Please choose cover book</div>
+                                    <input type="file" accept="image/png, image/gif, image/jpeg, " hidden id="iptFile"
+                                           custom-on-change="fileProgress" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="form-group">
+                        <label class="required">Book name</label>
+                        <input type="text" id="display-name" class="form-control" ng-model="truyen.tenTruyen" ng-disabled="isDisableBookForm()">
+                        <div class="invalid-feedback" ng-show="isSubmited && !truyen.tenTruyen">This is required</div>
+                    </div>
+            
+                    <div class="form-group">
+                        <label class="">Description</label>
+                        <textarea rows="5" ng-model="truyen.moTa" style="width: 100%;" class="form-control"></textarea>
+                        <div class="invalid-feedback" ng-show="isSubmited && !truyen.moTa && action !== 'nhap'">This is required<</div>
+                    </div>
+            
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <div class="form-group">
+                                <label class="">Category</label>
+                                <ui-select multiple ng-model="truyen.theLoai" theme="select2" close-on-select="false"
+                                           title="Choose a person" style="display: block;min-height:35px;" ng-disabled="isReadOnly()">
+                                    <ui-select-match placeholder="Chọn thể loại">{{$item.name}}</ui-select-match>
+                                    <ui-select-choices group-by="someGroupFn" repeat="theLoai in listTheLoai | propsFilter: {name: $select.search}">
+                                        <div ng-bind-html="theLoai.name | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <div class="invalid-feedback" ng-show="isSubmited && !truyen.theLoai && action !== 'nhap'">This is required</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label class="">Price</label>
+                                <input type="number" class="form-control" ng-model="truyen.giaTronBo" ng-disabled="truyen.isFreeBook">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="d-flex">
+                            <label class="d-flex align-items-center">
+                                <input type="checkbox"  class="chk-col-blue filled-in ckb-f" value="true"
+                                       ng-model="truyen.isPublish">
+                                <label style="margin-left: 10px; font-weight: 600;">Public</label>
+                            </label>
+                            
+                            <label class="d-flex align-items-center" style="margin-left: 20px;">
+                                <input type="checkbox"  class="chk-col-blue filled-in ckb-f" value="true"
+                                       ng-model="truyen.isFreeBook" ng-change="checkFreeBook()">
+                                <label style="margin-left: 10px; font-weight: 600;">Only sell chapters</label>
+                            </label>
+                            
+                            <label class="d-flex align-items-center" style="margin-left: 20px;">
+                                <input type="checkbox"  class="chk-col-blue filled-in ckb-f" value="true"
+                                       ng-model="truyen.isCompleted">
+                                <label style="margin-left: 10px; font-weight: 600;">Book completed </label>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="row form-group">
+                        <div class="col-sm-12 d-flex mt-4" ng-if="truyen.id">
+                            <label style="font-weight: 600;">Status</label>
+                            <div class="chapter-status-container">
+                                <div class="chapter-status-item chapter-nhap badge-secondary" ng-if="truyen.trangThai === 1">
+                                    Draft
+                                </div>
+                                                
+                                <div class="chapter-status-item chapter-guiDuyet badge-primary" ng-if="truyen.trangThai === 2">
+                                    Pending
+                                </div>
+                                                
+                                <div class="chapter-status-item chapter-tuChoi badge-danger" ng-if="truyen.trangThai === 4">
+                                    Reject
+                                </div>
+                                                
+                                <div class="chapter-status-item chapter-duyet badge-success" ng-if="truyen.trangThai === 3">
+                                    Approved
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+            
+                    <h5 class="mt-4"></h5>
+                    <div class="account-details-form">
+                        <div class="row">
+                            <div class="col-12">
+                                <h4>Book chapters
+                                    <button class="btn-add-chapter" ng-click="addChapter()" ng-disabled="truyen.isCompleted">+</button>
+                                </h4>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-left">Chapter name</th>
+                                                <th style="width: 100px;" class="text-center">Status</th>
+                                                <th style="width: 80px;" class="text-center">Public</th>
+                                                <th style="width: 130px;" class="text-center">Modified time</th>
+                                                <th style="width: 100px;" class="text-center">Action</th>
+                                            </tr>
+                                        </thead>
+                                        
+                                        <tbody>
+                                        <tr ng-repeat="item in listChapter">
+                                            <td>{{item.tieuDe}}</td>
+                                            <td class="text-center">
+                                                <span class="badge badge-secondary" ng-if="item.trangThai === 1">Draft</span>
+                                                <span class="badge badge-primary" ng-if="item.trangThai === 2">Request approve</span>
+                                                <span class="badge badge-success" ng-if="item.trangThai === 3">Approve</span>
+                                                <span class="badge badge-danger" ng-if="item.trangThai === 4">Reject</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <i class="fa fa-check-square" style="color: green" ng-if="item.isPublish"></i>
+                                                <i class="fa fa-eye-slash" ng-if="!item.isPublish"></i>
+                                            </td>
+                                            <td>{{item.ngayChinhSua}}</td>
+                                            <td class="text-center">
+                                                <a href="javascript:void(0);" ng-click="editChapter(item)"
+                                                   class="waves-effect waves-block">Edit</a>
+                                                <a href="javascript:void(0);" ng-click="deleteChapter(item)" 
+                                                   ng-if="[1].indexOf(item.trangThai) > -1"
+                                                   class="waves-effect waves-block">Delete</a>
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr ng-if="listChapter.length === 0">
+                                            <td colspan="5">No data</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <div class="single-input-item button-book-detail-container">
+                        <button class="btn btn-sqr" ng-click="saveBook('nhap')" 
+                                style="background-color: white;color: black;border: 1px solid black;"
+                                ng-if="!truyen.id || truyen.trangThai == 1">Save</button>
+                        <button class="btn btn-sqr" ng-click="saveBook('publish')">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

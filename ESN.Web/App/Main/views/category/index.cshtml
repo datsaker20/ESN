@@ -1,0 +1,66 @@
+﻿<div class="row clearfix" ng-controller="app.views.category.index as vm">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card main-content">
+            <div class="header">
+                <h2>
+                    Category management
+                </h2>
+            </div>
+            <div class="body table-responsive">
+                
+                <div class="filter-container">
+                    <input style="width: 350px;" ng-model="vm.term" class="form-control form-control-sm"/>
+                    <button style="border-width: 1px;" ng-click="vm.search(true)" class="btn btn-info btn-sm">Search</button>
+                    
+                    <button style="margin-left: auto" type="button" data-toggle="modal" 
+                            class="btn btn-primary btn-circle waves-effect waves-circle waves-float pull-right" 
+                            ng-click="vm.create()">
+                        <i class="material-icons">add</i>
+                    </button>
+                    
+                </div>
+
+                <!-- ******************************************************** -->
+                <div class="seperate" style="height: 1px; border-bottom: 1px dashed #dddddd; margin-top: 10px; margin-bottom: 10px"></div>
+                
+                <table class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>Category name</th>
+                        <th>Parent category</th>
+                        <th>Display</th>
+                        <th>Order</th>
+                        <th style="width: 100px">@L("Actions")</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in vm.data">
+                        <td>{{item.name}}</td>
+                        <td>{{item.parentName}}</td>
+                        <td>
+                            <i class="material-icons" ng-if="item.is_display" style="color:green;">check_box</i>
+                            <i class="material-icons" ng-if="!item.is_display" style="color:red;">indeterminate_check_box</i>
+                        </td>
+                        <td>{{item.order}}</td>
+                        <td class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">menu</i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a href="javascript:void(0);" class="waves-effect waves-block" ng-click="vm.edit(item)"><i class="material-icons">create</i>@L("Edit")</a></li>
+                                <li><a href="javascript:void(0);" class="waves-effect waves-block" ng-click="vm.delete(item)"><i class="material-icons">delete_sweep</i>@L("Delete")</a></li>
+                            </ul>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <ul uib-pagination ng-change="vm.pageChanged()" rotate="false"
+                    total-items="vm.totalItems" ng-model="vm.page" max-size="vm.pageSize"
+                    class="pagination-sm" boundary-link-numbers="true">
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</div>

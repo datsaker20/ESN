@@ -1,0 +1,52 @@
+<div class="product-main-area mb-70 mt-20" ng-controller="app.views.public.bookOfCategory">
+    <div class="container" style="max-width: 900px;">
+        <div class="row">
+            <div class="col-12">
+                <h5>{{categoryName}}</h5>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-12">
+                <div class="header-filter mb-25">
+                    <span style="font-weight: bold" ng-if="subCategories.length === 0">Total {{totalItems}} books</span>
+                    <div class="sub-categories" ng-if="subCategories.length > 0">
+                        <span class="subCategoryItem" ng-click="filterSub(sub.id)" 
+                              ng-class="{'active': selectedSub === sub.id}"
+                              ng-repeat="sub in subCategories"> {{sub.name}} | </span>
+                        <span class="subCategoryItem" ng-class="{'active': selectedSub === 0}" ng-click="filterSub(0)"> All </span>
+                    </div>
+
+                    <div class="filter-right-container">
+                        <i class="fa fa-sort"></i>
+                        <span ng-click="filter('view')">View</span> | <span ng-click="filter('rate')">Rating</span>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div class="item" ng-repeat="item in data">
+                        <img src="{{item.cover_book}}" alt="11" ng-click="goToBookDetail(item.id)" class="book-img"/>
+                        <div class="item-info">
+                            <div class="product-rating">
+                                <ul>
+                                    <li><a><i class="fa fa-star" ng-style="{'color': item.rate > 0 ? '#F07C29' : 'inherit'}"></i></a></li>
+                                    <li><a><i class="fa fa-star" ng-style="{'color': item.rate > 1 ? '#F07C29' : 'inherit'}"></i></a></li>
+                                    <li><a><i class="fa fa-star" ng-style="{'color': item.rate > 2 ? '#F07C29' : 'inherit'}"></i></a></li>
+                                    <li><a><i class="fa fa-star" ng-style="{'color': item.rate > 3 ? '#F07C29' : 'inherit'}"></i></a></li>
+                                    <li><a><i class="fa fa-star" ng-style="{'color': item.rate > 4 ? '#F07C29' : 'inherit'}"></i></a></li>
+                                </ul>
+                            </div>
+                            <h5 class="book-name">{{item.name}}</h5>
+                            <div class="book-price">{{item.price | number:0}} <i class="fa fa-bitcoin"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <ul uib-pagination ng-change="pageChanged()" rotate="false"
+                    total-items="totalItems" ng-model="page" max-size="pageSize"
+                    class="pagination mt-20" boundary-link-numbers="true">
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

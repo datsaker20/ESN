@@ -1,0 +1,222 @@
+﻿@using System.Threading
+@using System.Web.Optimization
+@using Abp.Timing
+@using Abp.Web.Mvc.Extensions
+@{
+    Layout = null;
+    SetAntiForgeryCookie();
+}
+
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>ESN - eBook Social Network</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.png">
+    <link rel="stylesheet" href="~/js/ng-select/select.min.css">
+    <!-- all css here -->
+    <!-- bootstrap v3.3.6 css -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <!-- animate css -->
+    <link rel="stylesheet" href="~/css/animate.css">
+    <!-- meanmenu css -->
+    <link rel="stylesheet" href="~/css/meanmenu.min.css">
+    <!-- owl.carousel css -->
+    <link rel="stylesheet" href="~/css/owl.carousel.css">
+    <!-- font-awesome css -->
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <!-- flexslider.css-->
+    <link rel="stylesheet" href="~/css/flexslider.css">
+    <!-- chosen.min.css-->
+    <link rel="stylesheet" href="~/css/chosen.min.css">
+    <!-- style css -->
+    <link rel="stylesheet" href="~/css/style1.css">
+    <!-- responsive css -->
+    <link rel="stylesheet" href="~/css/responsive.css">
+
+    <link rel="stylesheet" href="~/lib/toastr/toastr.css" />
+
+    <!-- modernizr css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.default.css">
+
+    <script src="~/js/vendor/modernizr-2.8.3.min.js"></script>
+
+    <script type="text/javascript">
+        var isAdminLayout = "";
+        //This is used to get the application's root path from javascript. It's useful if you're running application in a virtual directory under IIS.
+        var abp = abp || {}; abp.appPath = '@ApplicationPath';
+    </script>
+
+    @Scripts.Render("~/Bundles/App/vendor/js")
+
+    <script>
+        //Localizing momentjs
+        moment.locale('@Thread.CurrentThread.CurrentUICulture.Name');
+    </script>
+
+    <!-- Dynamic scripts of ABP system (They are created on runtime and can not be bundled) -->
+    <script src="~/api/AbpServiceProxies/GetAll?v=@(Clock.Now.Ticks)"></script>
+    <script src="~/api/AbpServiceProxies/GetAll?type=angular&v=@(Clock.Now.Ticks)"></script>
+    <script src="~/AbpScripts/GetScripts?v=@(Clock.Now.Ticks)" type="text/javascript"></script>
+
+    <!-- SignalR scripts -->
+    <script src="~/signalr/hubs"></script>
+    @Html.IncludeScript("~/Abp/Framework/scripts/libs/abp.signalr.js")
+
+    @Scripts.Render("~/Bundles/App/Main/js")
+</head>
+
+<body class="home-2" ng-app="app">
+    <header>
+        <!-- header-top-area-start -->
+        <div class="header-top-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-12">
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-12">
+                        <div class="account-area text-end">
+                            <ul>
+                                <li ng-if="isLogon">
+                                    <span class="notify-container" ng-click="goToNotification()">
+                                        <i class="fa fa-bell" ></i>
+                                        <span class="indicator" ng-if="isNewNoti"></span>
+                                    </span>
+                                </li>
+                                <li id="my-coin" ng-if="isLogon">
+                                    <div ng-click="goToRecharge()">
+                                        {{userCoin | number:0}} <i class="fa fa-bitcoin"></i>
+                                    </div>
+                                </li>
+                                <li id="btnMyAccount">
+                                    <a ui-sref="my-account" class="d-flex align-items-center">
+                                        <div class="image img-login">
+                                            <img src="/images/user.png" width="48" height="48" alt="User">
+                                        </div>
+                                        <span> My account </span>
+                                    </a>
+                                </li>
+                                <li id="btnSignIn"><a href="~/account/login">Sign in</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- header-top-area-end -->
+        <!-- header-mid-area-start -->
+        <!-- header-mid-area-end -->
+        <!-- main-menu-area-start -->
+        <div class="main-menu-area d-md-none d-none d-lg-block" id="header-sticky">
+            <div class="container" style="position: relative">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="menu-area" style="width: 100%;">
+                            <nav>
+                                <ul style="display: flex; align-items: center;">
+                                    <li class="active li-logo">
+                                        <a href="~/home" class="li-logo">
+                                            <img src="~/img/logo/eBook_logo.png" alt="logo" style="height: 47px"/>
+                                        </a>
+                                    </li>
+                                    
+                                    <li>
+                                        <a>Categories<i class="fa fa-angle-down"></i></a>
+                                        <div class="mega-menu">
+                                            <span ng-repeat="item in categoriesAll">
+                                                <a ui-sref="category-books({categoryId: item.id})" class="title" style="cursor: pointer">{{item.name}}</a>
+                                            </span>
+                                        </div>
+                                    </li>
+                                    
+                                    <li><a ui-sref="book-buy-most({mode: 'week'})">Books of week</a></li>
+                                    <li><a ui-sref="book-buy-most({mode: 'month'})">Books of month</a></li>
+                                    <li style="margin-left: auto;" id="search-nav-item">
+                                        <div class="header-search">
+                                            <form id="form-search-c">
+                                                <input type="text" style="width: 300px;" placeholder="Search book here..." ng-model="keyword">
+                                                <a ng-click="searchBook()"><i class="fa fa-search" style="padding-left: 0;color: white;"></i></a>
+                                            </form>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- main-menu-area-end -->
+    </header>
+
+
+    <div class="section-element-area ptb-70" style="">
+    			<div class="container">
+    				<div class="row">
+    					<div class="col-lg-12">
+    						<div class="entry-header text-center mb-20">
+    							<img src="~/img/oops.jpg" alt="not-found-img" style="height: 235px;">
+    							<h4 style="margin-top: 20px;">Oops! You do not have permission to access this page.</h4>
+    						</div>
+    						<div class="entry-content text-center mb-30">
+    							<a href="~/">GO TO HOME</a>
+    						</div>
+    					</div>
+    				</div>
+    			</div>
+    		</div>
+
+
+<!-- Modal end -->
+    <!-- all js here -->
+    <!-- jquery latest version -->
+    <script src="~/js/vendor/jquery-1.12.4.min.js"></script>
+
+
+    <!-- bootstrap js -->
+    <script src="~/js/bootstrap.min.js"></script>
+    <!-- owl.carousel js -->
+    <script src="~/js/owl.carousel.min.js"></script>
+    <!-- meanmenu js -->
+    <script src="~/js/jquery.meanmenu.js"></script>
+    <!-- wow js -->
+    <script src="~/js/wow.min.js"></script>
+    <!-- jquery.parallax-1.1.3.js -->
+    <script src="~/js/jquery.parallax-1.1.3.js"></script>
+    <!-- jquery.countdown.min.js -->
+    <script src="~/js/jquery.countdown.min.js"></script>
+    <!-- jquery.flexslider.js -->
+    <script src="~/js/jquery.flexslider.js"></script>
+    <!-- chosen.jquery.min.js -->
+    <script src="~/js/chosen.jquery.min.js"></script>
+    <!-- jquery.counterup.min.js -->
+    <script src="~/js/jquery.counterup.min.js"></script>
+    <!-- waypoints.min.js -->
+    <script src="~/js/waypoints.min.js"></script>
+    <!-- plugins js -->
+    <script src="~/js/plugins.js"></script>
+    <!-- main js -->
+    <script src="~/js/main1.js"></script>
+    <script src="~/lib/ckeditor/ckeditor.js"></script>
+    <script src="~/js/ng-select/select.min.js"></script>
+<script src="~/lib/ckeditor/angular-ckeditor.min.js"></script>
+
+<script>
+    $( document ).ready(function() {
+        if (!abp.session || !abp.session.userId) {
+            $('#btnMyAccount').remove();
+        }  else {
+            $('#btnSignIn').remove();
+        }
+    });
+</script>
+</body>
+
+</html>

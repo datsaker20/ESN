@@ -1,0 +1,91 @@
+﻿<div  class="container" ng-controller="chapter-create-edit-controller">
+    <div class="row" style="min-height: 100vh"  ng-if="!!chapter">
+        <div class="col-12">
+            <div class="myaccount-content" id="book-detail-container">
+                <div class="form-group">
+                    <label class="required">Chapter name</label>
+                    <input type="text" class="form-control" ng-model="chapter.tieuDe" ng-change="checkChangeChapter()">
+                    <div class="invalid-feedback" ng-show="isSubmited && !chapter.tieuDe && action !== 'nhap'">Không được để trống</div>
+                </div>
+    
+                <div class="form-group">
+                    <label class="required">Chapter content</label>
+                    <div ckeditor="options" ng-model="chapter.noiDung" ng-change="checkChangeChapter()" readonly="{{isReadOnly1()}}"></div>
+                    <div class="invalid-feedback" ng-show="isSubmited && ! chapter.noiDung && action !== 'nhap'">Không được để trống</div>
+                </div>
+    
+                <div class="row mt-2 clearfix">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="">Price</label>
+                            <input type="number" class="form-control" id="chapter-price" ng-model="chapter.giaBan">
+                        </div>
+                    </div>
+    
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Last modified time</label>
+                            <input type="text" disabled class="form-control" ng-model="chapter.ngayChinhSua"/>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-2 clearfix" ng-if="!!chapter.id">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="">Request date</label>
+                            <input type="text" class="form-control"
+                                   ng-model="chapter.request_approve_date | date: 'dd/MM/yyyy HH:mm'" disabled="disabled">
+                        </div>
+                    </div>
+    
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Approve/reject date</label>
+                            <input type="text" disabled class="form-control" 
+                                   ng-model="chapter.approve_reject_date | date: 'dd/MM/yyyy HH:mm'"/>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="form-group">
+                    <div class="d-flex">
+                        <label class="d-flex align-items-center">
+                            <input type="checkbox"  class="chk-col-blue filled-in ckb-f" value="true"
+                                   ng-model="chapter.isPublish" ng-click="onChangePublic()">
+                            <label style="margin-left: 10px; font-weight: 600;">Public</label>
+                        </label>
+                    </div>
+                </div>
+                            
+                <div class="row form-group">
+                    <div class="col-sm-12 d-flex mt-4" ng-if="chapter.id">
+                        <label style="font-weight: 600;">Trạng thái</label>
+                        <div class="chapter-status-container">
+                            <div class="chapter-status-item chapter-nhap badge-secondary" ng-if="chapter.trangThai === 1">
+                                Draft
+                            </div>
+                            
+                            <div class="chapter-status-item chapter-guiDuyet badge-primary" ng-if="chapter.trangThai === 2">
+                                Pending
+                            </div>
+                            
+                            <div class="chapter-status-item chapter-tuChoi badge-danger" ng-if="chapter.trangThai === 4">
+                                Reject
+                            </div>
+                            
+                            <div class="chapter-status-item chapter-duyet badge-success" ng-if="chapter.trangThai === 3">
+                                Approved
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="single-input-item button-book-detail-container" style="margin-top: 50px;">
+                    <button class="btn btn-sqr" ng-click="saveChapter('nhap')" style="background-color: white;color: black;border: 1px solid black;" ng-if="!chapter.id || chapter.trangThai == 1">Save</button>
+                    <button class="btn btn-sqr" ng-click="saveChapter('publish')">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

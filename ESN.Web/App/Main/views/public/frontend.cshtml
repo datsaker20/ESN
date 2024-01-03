@@ -1,0 +1,116 @@
+﻿<div ng-controller="app.views.public.home">
+    <div class="new-book-area pt-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title section-title-res text-center mb-30">
+                        <h4>New Book</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-active owl-carousel">
+                <div class="tab-total" ng-repeat="book in listBookNew">
+                    <!-- single-product-start -->
+                    <div class="product-wrapper">
+                        <div class="product-img">
+                            <a ui-sref="book-detail({bookId:book.id})">
+                                <img src="{{book.cover_book}}" alt="cover-img" class="primary" />
+                            </a>
+                        </div>
+                        
+                        <div class="product-details text-center">
+                            <div class="product-rating">
+                                <ul>
+                                    <li><a><i class="fa fa-star" style="color: red"></i><span style="color: red; margin-left: 5px;">{{book.rate || 0}}({{book.quantity || 0 | number:0}})</span></a></li>
+                                </ul>
+                            </div>
+                            <h4><a>{{book.name}}</a></h4>
+                            <div class="product-price">
+                                <ul>
+                                    <li>{{book.is_book_free ? 'Free' : book.price | number:0}} <i class="fa fa-bitcoin"></i></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- single-product-end -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="new-book-area pt-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title section-title-res text-center mb-30">
+                        <h4>Best seller</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-active owl-carousel">
+                <div class="tab-total" ng-repeat="book in listBookSellest">
+                    <!-- single-product-start -->
+                    <div class="product-wrapper">
+                        <div class="product-img">
+                            <a ui-sref="book-detail({bookId:book.id})">
+                                <img src="{{book.cover_book}}" alt="cover-img" class="primary" />
+                            </a>
+                        </div>
+                        <div class="product-details text-center">
+                            <div class="product-rating">
+                                <ul>
+                                    <li><a><i class="fa fa-star" style="color: red"></i><span style="color: red; margin-left: 5px;">{{book.rate || 0}}({{book.quantity || 0 | number:0}})</span></a></li>
+                                </ul>
+                            </div>
+                            <h4><a href="#">{{book.name}}</a></h4>
+                            <div class="product-price">
+                                <ul>
+                                    <li>{{book.is_book_free ? 'Free' : book.price | number:0}} <i class="fa fa-bitcoin"></i></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- single-product-end -->
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    <div class="new-book-area pt-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title section-title-res text-center mb-30">
+                        <h4>Most Favorite</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-active owl-carousel">
+                <div class="tab-total" ng-repeat="book in listBookRate">
+                    <!-- single-product-start -->
+                    <div class="product-wrapper">
+                        <div class="product-img">
+                            <a ui-sref="book-detail({bookId:book.id})">
+                                <img src="{{book.cover_book}}" alt="cover-img" class="primary" />
+                            </a>
+                        </div>
+                        <div class="product-details text-center">
+                            <div class="product-rating">
+                                <ul>
+                                    <li><a><i class="fa fa-star" style="color: red"></i><span style="color: red; margin-left: 5px;">{{book.rate || 0}}({{book.quantity || 0 | number:0}})</span></a></li>
+                                </ul>
+                            </div>
+                            <h4><a>{{book.name}}</a></h4>
+                            <div class="product-price">
+                                <ul>
+                                    <li>{{book.is_book_free ? 'Free' : book.price | number:0}} <i class="fa fa-bitcoin"></i></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- single-product-end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

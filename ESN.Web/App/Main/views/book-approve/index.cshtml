@@ -1,0 +1,63 @@
+﻿<div class="row clearfix" ng-controller="app.views.book-approve.index as vm">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card main-content">
+            <div class="header">
+                <h2>Book approve</h2>
+            </div>
+            <div class="body table-responsive">
+                
+                <div class="filter-container">
+                    <input style="width: 350px;" ng-model="vm.keyword" class="form-control form-control-sm"/>
+                    <select ng-model="vm.status" class="form-control form-control-sm">
+                         <option value="0">All</option>
+                        <option value="2">Request Approve</option>
+                        <option value="3">Approved</option>
+                        <option value="4">Rejected</option>
+                    </select>
+                    
+                    <label class="align-items-center" style="display: flex">
+                        <input type="checkbox" name="name11" value="1"
+                               style="width: 20px; height: 20px; position: relative; opacity: 1; left: 0;margin-bottom: 0; margin-top: 0"
+                               ng-model="vm.isMyApprove" />
+                        <span style="margin-left: 10px; font-weight: 600;">My Approver</span>
+                     </label>
+                    
+                    <button style="border-width: 1px;" ng-click="vm.search()" class="btn btn-info btn-sm">Search</button>
+                </div>
+
+                <!-- ******************************************************** -->
+                <div class="seperate" style="height: 1px; border-bottom: 1px dashed #dddddd; margin-top: 10px; margin-bottom: 10px"></div>
+                
+                <table class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>Book name</th>
+                        <th>Author user</th>
+                        <th>Request date</th>
+                        <th>Approve date</th>
+                        <th style="width: 100px">@L("Actions")</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in vm.data">
+                        <td>{{item.name}}</td>
+                        <td>{{item.ownerName}}</td>
+                        <td>{{item.minRequestApprove | date: 'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{item.maxApproveDate | date: 'dd/MM/yyyy HH:mm' }}</td>
+                        <td class="text-center">
+                            <a href="javascript:void(0);" class="waves-effect waves-block" ng-click="vm.openBookDetail(item)">
+                                <i class="material-icons">remove_red_eye</i>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <ul uib-pagination ng-change="vm.pageChanged()" rotate="false"
+                    total-items="vm.totalItems" ng-model="vm.page" max-size="vm.pageSize"
+                    class="pagination-sm" boundary-link-numbers="true">
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

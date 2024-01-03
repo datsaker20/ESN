@@ -1,0 +1,60 @@
+﻿<div class="product-main-area mb-70 mt-20" ng-controller="app.views.public.bookSearch">
+    <div class="container">
+        <div class="row" style="margin-bottom: 20px;">
+            <div class="col-12">
+                <h5 ng-if="!!searchKeyword">Result for <span>{{keyword}}</span></h5>
+                <h5 ng-if="!searchKeyword">Search Results</h5>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-3">
+                <div class="shop-left">
+                    <div class="left-title mb-20">
+                        <h5>Category</h5>
+                    </div>
+                    <div class="left-menu mb-30">
+                        <ul id="cate-search-c">
+                            <li ng-class="{'active': !categoryId || categoryId === '0' }"><a ng-click="filterByCategory(item.id)">All</a></li>
+                            <li ng-repeat="item in categoriesAll" ng-class="{'active': item.id == categoryId}"><a ng-click="filterByCategory(item.id)">{{item.name}}</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="header-filter mb-25" style="margin-top: 0;">
+                    <span style="font-weight: bold">Total {{totalItems}} books</span>
+
+                    <div class="filter-right-container">
+                        <i class="fa fa-sort"></i>
+                        <span ng-click="filter('view')">View</span> | <span ng-click="filter('rate')">Rating</span>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div class="item" ng-repeat="item in data">
+                        <img src="{{item.cover_book}}" alt="11" ng-click="goToBookDetail(item.id)" class="book-img"/>
+                        <div class="item-info">
+                            <div class="product-rating">
+                                <ul>
+                                    <li><a><i class="fa fa-star" ng-style="{'color': item.rate > 0 ? '#F07C29' : 'inherit'}"></i></a></li>
+                                    <li><a><i class="fa fa-star" ng-style="{'color': item.rate > 1 ? '#F07C29' : 'inherit'}"></i></a></li>
+                                    <li><a><i class="fa fa-star" ng-style="{'color': item.rate > 2 ? '#F07C29' : 'inherit'}"></i></a></li>
+                                    <li><a><i class="fa fa-star" ng-style="{'color': item.rate > 3 ? '#F07C29' : 'inherit'}"></i></a></li>
+                                    <li><a><i class="fa fa-star" ng-style="{'color': item.rate > 4 ? '#F07C29' : 'inherit'}"></i></a></li>
+                                </ul>
+                            </div>
+                            <h5 class="book-name">{{item.name}}</h5>
+                            <div class="book-price">{{item.price | number:0}} <i class="fa fa-bitcoin"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <ul uib-pagination ng-change="pageChanged()" rotate="false"
+                    total-items="totalItems" ng-model="page" max-size="pageSize"
+                    class="pagination mt-20" boundary-link-numbers="true">
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

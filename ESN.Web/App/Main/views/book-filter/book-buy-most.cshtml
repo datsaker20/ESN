@@ -1,0 +1,46 @@
+﻿<div class="product-main-area mb-70 mt-20" ng-controller="app.views.public.bookBuyMost">
+    <div class="container" style="max-width: 900px;">
+        <div class="row">
+            <div class="col-12">
+                <div class="header-filter">
+                    <span style="font-weight: bold">Total {{totalItems}} books</span>
+                </div>
+                
+                <div class="grid-line">
+                    <div class="item-line" ng-repeat="item in data">
+                        <img src="{{item.cover_book}}" alt="cover book" ng-click="goToBookDetail(item.id)"/>
+                        <div class="book-item-right">
+                            <div class="book-name" style="font-weight: bold">{{item.name}}</div>
+                            <div>
+                                <div class="rating-summary">
+                                    <a><i class="fa fa-star" ng-style="{'color': item.rate > 0 ? '#F07C29' : 'inherit'}"></i></a>
+                                    <a><i class="fa fa-star" ng-style="{'color': item.rate > 1 ? '#F07C29' : 'inherit'}"></i></a>
+                                    <a><i class="fa fa-star" ng-style="{'color': item.rate > 2 ? '#F07C29' : 'inherit'}"></i></a>
+                                    <a><i class="fa fa-star" ng-style="{'color': item.rate > 3 ? '#F07C29' : 'inherit'}"></i></a>
+                                    <a><i class="fa fa-star" ng-style="{'color': item.rate > 4 ? '#F07C29' : 'inherit'}"></i></a>
+                                    <span style="margin-left: 5px; color: red">{{item.quantity || 0}} reviews</span>
+                                </div>
+                                                    
+                                <span>Total {{item.chapterCount | number: 0}} chapter</span> | <span> Category: {{item.categories}}</span>
+                            </div>
+                            
+                            <div class="book-description">
+                                {{item.description}}
+                            </div>
+                                                
+                            <div>
+                                <span style="font-weight: bold">Price</span>: <span class="book-free-label" ng-if="item.is_book_free">Free</span>
+                                <span class="" ng-if="!item.is_book_free">{{item.price | number:0}} <i class="fa fa-bitcoin"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <ul uib-pagination ng-change="pageChanged()" rotate="false"
+                    total-items="totalItems" ng-model="page" max-size="pageSize"
+                    class="pagination" boundary-link-numbers="true">
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
